@@ -13,7 +13,14 @@
 #ifndef HEDGE
 #define HEDGE
 
- 
+struct regs /* Registers */
+{
+    unsigned int gs, fs, es, ds;      
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; 
+    unsigned int int_no, err_code;    
+    unsigned int eip, cs, eflags, useresp, ss; 
+};
+
 typedef unsigned int size;
 typedef long long big;
 typedef unsigned long long ubig;//witous
@@ -29,9 +36,9 @@ extern void HHSendCharToPort(unsigned short _port, char _char);
 extern void HHPrint(char *string);
 extern void HHPrintChar(char c);
 void HHCrash(char *err);
-//void irq_install_handler(int irq, void (*handler)(struct regs *r));
+void irq_install_handler(int irq, void (*handler)(struct regs *r));
 
-
+char *HHStrCat(char *a, char *b, len max);
 
 extern void HHGdtSetGate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 

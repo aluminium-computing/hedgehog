@@ -5,6 +5,6 @@
 #include "fs.h"
 #include "HRFS_driver.h"
 
-HHFile HHFileOpen(char *path) { // HHFileOpen opens a file
-	
+void HHFileOpen(char *path) { // HHFileOpen opens a file
+	return;
 }

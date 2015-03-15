@@ -19,13 +19,6 @@
 char kbd;
 char modifierKeys = 0;
 
-struct regs
-{
-    unsigned int gs, fs, es, ds;      
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; 
-    unsigned int int_no, err_code;    
-    unsigned int eip, cs, eflags, useresp, ss; 
-};
 
 // KeyBoarD for ENglish used in Aim City
 unsigned char kbdenac[128] =
@@ -152,7 +145,7 @@ char HHGetCharFromKbd() {
 }
 
 char *HHGetStringFromKBD(len len_) {
-  char string[len_];
+  char *string = (char *)HHAlloc(len_);
   int i = 0;
   while (i < len_) {
     string[i] = HHGetCharFromKbd();

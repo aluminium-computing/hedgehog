@@ -69,7 +69,7 @@ void HHInitialiseVideo() /* British spelling */ {
 
 
 void HHScroll() {
-  unsigned blank, temp;
+  unsigned blank;
   unsigned screenLines = 25;
   blank = 0x20 | (attrib << 8);
   while(csrY >= screenLines)
@@ -159,11 +159,6 @@ void HHCrash(char *err) {
   HHPrint("Hedgehog has encountered an error: ");
   HHPrint(err);
   HHPrint("\n\n\nThis may have been caused by an bad program, or a hardware malfunction.\n");
-  #ifdef DEBUG
-  if (err=="0x15_21_INTENT") {
-    HHPrint("This crash was intentional.");
-  }
-  #endif // DEBUG
   HHPrint("\nTry rebooting your computer.\n");
   HHPrint("\n\nFor more information, contact Aluminium Computing.\n");
   HHPrint("\nHedgehog v1.0");
@@ -180,7 +175,7 @@ int HHAlloc(size bytes) {
 		HHPrint("ERROR: Out of memory!\n");
 		HHPrint("Sorry, but Hedgehog ran out of memory. The system still works, so SAVE YOUR WORK IMMEDIATELY and restart.\n");
 		HHPrint("\nTHE RUNNING PROGRAM MAY STOP WORKING AT ANY TIME!!!!\n");
-		return -1;
+		return NULL;
 	}
 	int retval = memBase;
 	memBase += (int)bytes;
@@ -195,6 +190,18 @@ void HHFree(void *ptr) {
 		#warning "HHFree() is being called. It isn't implemented yet."
 	#endif /* __GNUC__ */
 	return;
+}
+
+char *HHStrCat(char *a, char *b, len max) { /*  http://linux.die.net/man/3/strncat helped me */
+	len aLen = HHLenOf(a);
+	int i;
+	
+	for (i = 0; i < max && b[i] != NULL; i++) {
+		a[aLen +i] = b[i];
+	}
+	a[aLen + i] = NULL;
+	
+	return a; 
 }
 
 /*
@@ -223,8 +230,6 @@ void HHInit() {
   __asm__ __volatile__ ("sti"); 
 	HHPrint(" 100%\n");
   HHPrint("Welcome to Hedgehog....\n\n\n");
-  void* test;
-  HHFree(test);
 
   while (1) {
   }

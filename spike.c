@@ -78,13 +78,6 @@ void *irqRoutines[16] =
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-struct regs
-{
-    unsigned int gs, fs, es, ds;      
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; 
-    unsigned int int_no, err_code;    
-    unsigned int eip, cs, eflags, useresp, ss; 
-};
 
 unsigned short *HHMemsetW(unsigned short *dest, unsigned short val, int count);
 
