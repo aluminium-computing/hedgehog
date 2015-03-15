@@ -62,7 +62,7 @@ unsigned short *HHMemsetW(unsigned short *dest, unsigned short val, int count) {
     return dest;
 }
 
-void HHInitialiseVideo() {
+void HHInitialiseVideo() /* British spelling */ {
   textMemPtr = (unsigned short *)0xB8000;
   HHClearScreen();
 }
@@ -167,7 +167,7 @@ void HHCrash(char *err) {
   HHPrint("\nTry rebooting your computer.\n");
   HHPrint("\n\nFor more information, contact Aluminium Computing.\n");
   HHPrint("\nHedgehog v1.0");
-	HHPrint("\n\nCopyright (c) 2013-2015 Aluminium Computing, Inc.\nYou may use it under ther terms of the APL.\n");
+	HHPrint("\n\nCopyright (c) 2013-2015 Aluminium Computing, Inc.\nYou may use it under the terms of the APL.\n");
 	while (1) {
 	}
   
@@ -187,6 +187,16 @@ int HHAlloc(size bytes) {
 	return retval;
 }
 
+void HHFree(void *ptr) {
+	#ifdef DEBUG
+		HHPrint("HHFree() was called, but isn't yet implemented.\n");
+	#endif /* DEBUG */
+	#ifdef __GNUC__ 
+		#warning "HHFree() is being called. It isn't implemented yet."
+	#endif /* __GNUC__ */
+	return;
+}
+
 /*
 void PrintChar(char char_) {
   ____putch(char_);
@@ -195,7 +205,7 @@ void PrintChar(char char_) {
 // hedgehog() is usually called main()
 
 void HHInit() {
-  HHInitialiseVideo();
+  HHInitialiseVideo(); /* Note British spelling */
   #ifdef DEBUG
     HHPrint("Entered C Kernel\n");
   #endif//DEBUG
@@ -213,7 +223,9 @@ void HHInit() {
   __asm__ __volatile__ ("sti"); 
 	HHPrint(" 100%\n");
   HHPrint("Welcome to Hedgehog....\n\n\n");
-  
+  void* test;
+  HHFree(test);
+
   while (1) {
   }
  
