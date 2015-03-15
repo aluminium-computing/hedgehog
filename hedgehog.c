@@ -1,5 +1,5 @@
 /* Licensed under APL
-   Copyright © 2013-2014 Aluminium Computing, Inc.
+   Copyright © 2013-2015 Aluminium Computing, Inc.
 */
 
 #define HAS_LIBC FALSE
@@ -17,7 +17,7 @@
 extern void HHClearScreen();
 //extern void ____putch(char c);
 extern void HHSetScreenColor(unsigned char forecolor, unsigned char backcolor);
-extern void HHInitializeVideo();
+extern void HHInitialiseVideo();
 
 // VGA variables
 unsigned short *textMemPtr;
@@ -62,7 +62,7 @@ unsigned short *HHMemsetW(unsigned short *dest, unsigned short val, int count) {
     return dest;
 }
 
-void HHInitializeVideo() {
+void HHInitialiseVideo() {
   textMemPtr = (unsigned short *)0xB8000;
   HHClearScreen();
 }
@@ -152,19 +152,39 @@ void HHPrint(char *foo) {
 void HHCrash(char *err) {
   attrib = (4 << 4) | (15 & 0x0F); // It's a RED screen of death
   HHClearScreen();
+  int i;
+  for (i=0;i <= 5;i++) {
+    HHPrint("SYSTEM CRASH! ");
+  }
   HHPrint("Hedgehog has encountered an error: ");
   HHPrint(err);
   HHPrint("\n\n\nThis may have been caused by an bad program, or a hardware malfunction.\n");
   #ifdef DEBUG
-	HHPrint("\nDid you type Control+;? That sequence may have caused this error");
+  if (err=="0x15_21_INTENT") {
+    HHPrint("This crash was intentional.");
+  }
   #endif // DEBUG
   HHPrint("\nTry rebooting your computer.\n");
-  HHPrint("\n\nFor more information, visit aluminium.aimci in a Web browser, or contact\nAluminium Computing\n");
+  HHPrint("\n\nFor more information, contact Aluminium Computing.\n");
   HHPrint("\nHedgehog v1.0");
-	HHPrint("\n\nCopyright (c) 2013-2014 Aluminium Computing, Inc.\nYou may use it under ther terms of the APL.\n");
+	HHPrint("\n\nCopyright (c) 2013-2015 Aluminium Computing, Inc.\nYou may use it under ther terms of the APL.\n");
 	while (1) {
 	}
   
+}
+int memBase = 0x100000;
+
+int HHAlloc(size bytes) {
+	if ((memBase + (int)bytes) > 0xFFFFFF) {
+		attrib = (4 << 4) | (15 & 0x0F); /* Screen goes red to signify we're out of memory */
+		HHPrint("ERROR: Out of memory!\n");
+		HHPrint("Sorry, but Hedgehog ran out of memory. The system still works, so SAVE YOUR WORK IMMEDIATELY and restart.\n");
+		HHPrint("\nTHE RUNNING PROGRAM MAY STOP WORKING AT ANY TIME!!!!\n");
+		return -1;
+	}
+	int retval = memBase;
+	memBase += (int)bytes;
+	return retval;
 }
 
 /*
@@ -175,35 +195,24 @@ void PrintChar(char char_) {
 // hedgehog() is usually called main()
 
 void HHInit() {
-  HHInitializeVideo();
-	#ifdef BUILD
-		HHPrint("Hedgehog v1.0");
-		HHPrint("\n\nCopyright (c) 2013-2014 Aluminium Computing, Inc.\nThis kernel is Open Software!\nYou may use it under ther terms of the APL.\n");
-	#else
-		HHPrint("Hedgehog v1.0 (UNKNOWN BUILD)\n\nCopyright (c) 2013-2014 Aluminium Computing, Inc.\nThis kernel is Open Software!\nYou may use it under ther terms of the APL.\n");
-		HHPrint("WARNING: You are likely using a non-official build of Hedgehog.\n");
-	#endif // BUILD
-	#ifdef DEBUG
-		HHPrint("WARNING: You are running a debug version of Hedgehog!\nYou MUST return this copy of Hedgehog to Aluminium Computing.\nIt may break at any time!!!\n\n");
-	#endif // DEBUG
-HHPrint("Booting...\n");
-	HHPrint("Loading HedGDT...");
+  HHInitialiseVideo();
+  #ifdef DEBUG
+    HHPrint("Entered C Kernel\n");
+  #endif//DEBUG
+  HHPrint("Starting Up... 15%");
   HHGdtInstall(); 
-	HHPrint(" 100%\n");
-	HHPrint("Loading Spike...");
+	HHPrint(" 30%");
   HHIdtInstall();
-	HHPrint(" 33%");
+	HHPrint(" 45%");
   HHIsrsInstall();
-	HHPrint(" 66%");
+	HHPrint(" 60%");
   HHIrqInstall(); 
-	HHPrint(" 100%\n");
-	HHPrint("Enabling keyboard support...");
+	HHPrint(" 70%");
   HHInstallKeyboard();
-	HHPrint(" 100%\n");
-	HHPrint("Enabling Interrupts...");
+	HHPrint(" 85%");
   __asm__ __volatile__ ("sti"); 
 	HHPrint(" 100%\n");
-  HHPrint("Booting done!\n\n\n");
+  HHPrint("Welcome to Hedgehog....\n\n\n");
   
   while (1) {
   }
