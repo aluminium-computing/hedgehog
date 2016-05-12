@@ -21,8 +21,8 @@ extern void HHInitialiseVideo();
 
 // VGA variables
 unsigned short *textMemPtr;
- // 0, Black Background; 15, White Foreground 
-int attrib = (0 << 4) | (15 & 0x0F); 
+ // 0, Black Background; 15, White Foreground
+int attrib = (0 << 4) | (15 & 0x0F);
 int csrX = 0;
 int csrY = 0;
 
@@ -32,6 +32,18 @@ void HHCopyBuf(char *dest, char *src, int size) {
     dest[i] = src[i];
 	  i++;
   }
+}
+
+int HHStrCmp(char *a, char *b, int min) {
+  int i = 0;
+  while (i < min) {
+    if (a[i] != b[i]) {
+      return (-1);
+    } else {
+      i++;
+    }
+  }
+  return 0;
 }
 
 len HHLenOf(char *string) {
@@ -49,7 +61,7 @@ char HHGetCharFromPort(unsigned short _port) {
   char rv;
   __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
   return rv;
-} 
+}
 
 void HHSendCharToPort(unsigned short _port, char _char) {
   __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_char));
@@ -93,7 +105,7 @@ void HHClearScreen() {
   unsigned blank;
   int i;
   blank = 0x20 | (attrib << 8);
-  for(i = 0; i < 25; i++) 
+  for(i = 0; i < 25; i++)
     HHMemsetW(textMemPtr + i * 80, blank, 80);
   csrX = 0;
   csrY = 0;
@@ -107,7 +119,7 @@ void HHPrintChar(char c) {
     {
         if(csrX != 0) csrX--;
     }
-    
+
     else if(c == 0x09)
     {
         csrX = (csrX + 8) & ~(8 - 1);
@@ -116,14 +128,14 @@ void HHPrintChar(char c) {
     {
         csrX = 0;
     }
-   
+
     else if(c == '\n')
     {
         csrX = 0;
         csrY++;
         HHScroll();
     }
-    
+
     else if(c >= ' ')
     {
         where = textMemPtr + (csrY * 80 + csrX);
@@ -138,7 +150,7 @@ void HHPrintChar(char c) {
         HHScroll();
     }
 
-    HHMoveCsr(); 
+    HHMoveCsr();
 }
 
 void HHPrint(char *foo) {
@@ -153,9 +165,10 @@ void HHCrash(char *err) {
   attrib = (4 << 4) | (15 & 0x0F); // It's a RED screen of death
   HHClearScreen();
   int i;
-  for (i=0;i <= 5;i++) {
+  for (i=0;i <= 4;i++) {
     HHPrint("SYSTEM CRASH! ");
   }
+  HHPrint("\n");
   HHPrint("Hedgehog has encountered an error: ");
   HHPrint(err);
   HHPrint("\n\n\nThis may have been caused by an bad program, or a hardware malfunction.\n");
@@ -165,7 +178,7 @@ void HHCrash(char *err) {
 	HHPrint("\n\nCopyright (c) 2013-2015 Aluminium Computing, Inc.\nYou may use it under the terms of the APL.\n");
 	while (1) {
 	}
-  
+
 }
 int memBase = 0x100000;
 
@@ -186,7 +199,7 @@ void HHFree(void *ptr) {
 	#ifdef DEBUG
 		HHPrint("HHFree() was called, but isn't yet implemented.\n");
 	#endif /* DEBUG */
-	#ifdef __GNUC__ 
+	#ifdef __GNUC__
 		#warning "HHFree() is being called. It isn't implemented yet."
 	#endif /* __GNUC__ */
 	return;
@@ -195,13 +208,33 @@ void HHFree(void *ptr) {
 char *HHStrCat(char *a, char *b, len max) { /*  http://linux.die.net/man/3/strncat helped me */
 	len aLen = HHLenOf(a);
 	int i;
-	
+
 	for (i = 0; i < max && b[i] != NULL; i++) {
 		a[aLen +i] = b[i];
 	}
 	a[aLen + i] = NULL;
-	
-	return a; 
+
+	return a;
+}
+
+
+
+char **HHStrTok(char *toTok, char delim) {
+  len Len = HHLenOf(toTok);
+  char **buf;
+  int i = 0;
+  int j = 0;
+  int k = 0;
+  while (i <= Len) {
+    if (toTok[i] != delim) {
+      buf[j][k] = toTok[i];
+      i++; k++;
+    } else { //first token done
+      j++; i++;
+      k = 0;
+    }
+  }
+  return buf;
 }
 
 /*
@@ -217,22 +250,21 @@ void HHInit() {
     HHPrint("Entered C Kernel\n");
   #endif//DEBUG
   HHPrint("Starting Up... 15%");
-  HHGdtInstall(); 
+  HHGdtInstall();
 	HHPrint(" 30%");
   HHIdtInstall();
 	HHPrint(" 45%");
   HHIsrsInstall();
 	HHPrint(" 60%");
-  HHIrqInstall(); 
+  HHIrqInstall();
 	HHPrint(" 70%");
   HHInstallKeyboard();
 	HHPrint(" 85%");
-  __asm__ __volatile__ ("sti"); 
+  __asm__ __volatile__ ("sti");
 	HHPrint(" 100%\n");
   HHPrint("Welcome to Hedgehog....\n\n\n");
-
+  ShellMain();
   while (1) {
   }
- 
-}
 
+}
