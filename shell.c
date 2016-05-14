@@ -16,9 +16,9 @@
 #include "shell.h"
 
 const int crashfail = 0;
-const char *prompt = "hedgehog% ";
-int run = 1;
+const char *prompt = "hedgehog% "; // % = SYSTEM, # = su >/$ = regular user
 int faillevel = 1;
+
 void ShellMain() {
   //initShell();
   runShell();
@@ -30,47 +30,37 @@ void initShell() {
 
 void runShell() {
   while (1) {
-
-      HHPrint(prompt);
-      run = 0;
-
-
+    HHPrint(prompt);
     char *command = input();
-    //HHPrint(command);
     if ((HHStrCmp(command, "test", 4)) == 0) {
-      void test();
       test();
-    } /*else if ((HHStrCmp(command, "help", 4)) == 0){
-      void help();
+    } else if ((HHStrCmp(command, "help", 4)) == 0){
       help();
-    } */else if ((HHStrCmp(command, "sysinfo", 7)) == 0){
-      void sysinfo();
+    } else if ((HHStrCmp(command, "sysinfo", 7)) == 0){
       sysinfo();
     } else if ((HHStrCmp(command, "whoami", 6)) == 0) {
-      void whoami();
       whoami();
+    } else if ((HHStrCmp(command, "crash", 5)) == 0) {
+      HHCrash("0x17_SHELL");
     } else {
-      void notFound(command);
       notFound(command);
     }
   }
 }
 
 char *input() {
-  char buf[2000];
+  char buf[MAX_COMMAND];
   char inp;
   int i = 0;
   inp = HHGetCharFromKbd();
-  while (inp != '\n' && i<1999) {
+  while (inp != '\n' && i < MAX_COMMAND) {
     if (inp != NULL) {
 
       buf[i] = inp;
       i++;
     }
     inp = HHGetCharFromKbd();
-
   }
-
   //return HHStrTok(buf, " ");
   //HHPrint("retinput");
   return buf;
@@ -117,10 +107,6 @@ void whoami() {
 void notFound(char *command) {
   if (faillevel == 2) {
     HHCrash(command);
-  } else if (faillevel == 1) {
-    HHPrint("hsh: command not found: ");
-    HHPrint(command);
-    HHPrint("\nTry `help' or `sysinfo'.\n");
   } else if (faillevel == -1) {
     HHPrint("E");
   } else {
@@ -128,4 +114,11 @@ void notFound(char *command) {
     HHPrint(command);
     HHPrint("\n");
   }
+}
+
+void help() {
+  HHPrint("  `crash': Crashes the system with error code 0x17_SHELL.\n");
+  HHPrint("   `test': Prints a test message. Has no purpose outside of testing.\n");
+  HHPrint("`sysinfo': Prints system information.\n");
+  HHPrint(" `whoami': Prints current user.\n");
 }
