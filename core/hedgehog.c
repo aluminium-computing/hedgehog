@@ -1,5 +1,5 @@
 /* Licensed under APL
-   Copyright © 2013-2015 Aluminium Computing, Inc.
+   Copyright © 2013-2016 Aluminium Computing, Inc.
 */
 
 #define HAS_LIBC FALSE
@@ -12,7 +12,7 @@
 #define AIM_KERNEL
 #define LICENSE AIM_PUBLIC
 
-#include "hedge"
+#include <hedgehog.h>
 
 extern void HHClearScreen();
 //extern void ____putch(char c);

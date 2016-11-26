@@ -12,8 +12,8 @@
 #define AIM_KERNEL
 #define LICENSE AIM_PUBLIC
 
-#include "hedge"
-#include "shell.h"
+#include <hedgehog.h>
+#include <shell.h>
 
 const int crashfail = 0;
 const char *prompt = "hedgehog% "; // % = SYSTEM, # = su >/$ = regular user

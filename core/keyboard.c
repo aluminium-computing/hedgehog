@@ -10,7 +10,7 @@
 #define _HEDGEHOG
 #define AIM_KERNEL
 
-#include "hedge"
+#include <hedgehog.h>
 
 #define   SHIFT_KEY 0x01 // 001
 #define CONTROL_KEY 0x02 // 010

@@ -1,7 +1,7 @@
 // Adapted from www.osdever.net/bkerndev/Docs/idt.htm
 // and www.osdever.net/bkerndev/Docs/isrs.htm
 
-// Note: Spike is Hedgehog's interrupt system. 
+// Note: Spike is Hedgehog's interrupt system.
 
 
 #define HAS_LIBC FALSE
@@ -13,7 +13,7 @@
 #define _HEDGEHOG
 #define AIM_KERNEL
 
-#include "hedge"
+#include <hedgehog.h>
 
 /* These are function prototypes for all of the exception
 *  handlers: The first 32 entries in the IDT are reserved
@@ -46,7 +46,7 @@ extern void isr24();
 extern void isr25();
 extern void isr26();
 extern void isr27();
-extern void isr28();  
+extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
@@ -86,9 +86,9 @@ unsigned short *HHMemsetW(unsigned short *dest, unsigned short val, int count);
 struct idtEntry
 {
     unsigned short base_lo;
-    unsigned short sel;        
-    unsigned char always0;     
-    unsigned char flags;       
+    unsigned short sel;
+    unsigned char always0;
+    unsigned char flags;
     unsigned short base_hi;
 } __attribute__((packed));
 
@@ -111,7 +111,7 @@ void HHIdtSetGate(unsigned char num, unsigned long base, unsigned short sel, uns
     idt[num].sel = sel;
     idt[num].always0 = 0;
     idt[num].flags = flags;
-   
+
 }
 
 
@@ -211,7 +211,7 @@ void fault_handler(struct regs *r)
     {
         HHCrash(exception_messages[r->int_no]);
         while (1) {
-          
+
         }
     }
 }

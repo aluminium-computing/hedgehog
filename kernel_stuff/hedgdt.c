@@ -11,7 +11,7 @@
 #define _HEDGEHOG
 #define AIM_KERNEL
 
-#include "hedge"
+#include <hedgehog.h>
 
 struct gdtEntry
 {
@@ -63,4 +63,3 @@ void HHGdtInstall()
 
     HHGdtFlush();
 }
-
