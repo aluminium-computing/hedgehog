@@ -1,5 +1,5 @@
 ; Licensed under APL
-; Copyright © 2013-2014 Aluminium Computing, Inc.
+; Copyright © 2013, 2014, 2016 Aluminium Computing, Inc.
 
 [BITS 32]
 global start
@@ -23,7 +23,7 @@ mboot:
     dd MULTIBOOT_HEADER_MAGIC
     dd MULTIBOOT_HEADER_FLAGS
     dd MULTIBOOT_CHECKSUM
-    
+
     ; AOUT kludge - must be physical addresses. Make a note of these:
     ; The linker script fills in the data for these ones!
     dd mboot
@@ -53,6 +53,5 @@ run:
 ; downwards, so we declare the size of the data before declaring
 ; the identifier '_stack'
 SECTION .bss
-    resb 65536               ; This reserves 64KB of memory here
+    resb 131072               ; This reserves 128KiB of memory here
 _stack:
-

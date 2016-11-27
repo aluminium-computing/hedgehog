@@ -14,6 +14,7 @@
 
 #include <hedgehog.h>
 #include <shell.h>
+#include <gfx.h>
 
 const int crashfail = 0;
 const char *prompt = "hedgehog% "; // % = SYSTEM, # = su >/$ = regular user
@@ -42,6 +43,8 @@ void runShell() {
       whoami();
     } else if ((HHStrCmp(command, "crash", 5)) == 0) {
       HHCrash("0x17_SHELL");
+    } else if ((HHStrCmp(command, "gfx", 3)) == 0) {
+      gfx();
     } else {
       notFound(command);
     }
@@ -121,4 +124,45 @@ void help() {
   HHPrint("   `test': Prints a test message. Has no purpose outside of testing.\n");
   HHPrint("`sysinfo': Prints system information.\n");
   HHPrint(" `whoami': Prints current user.\n");
+  HHPrint("    `gfx': Tests Hedgehog Graphical System(TM).\n");
+}
+
+void gfx() {
+  GXInit();
+  GXSetColours('0','2');
+  GXAddHLine(15, 30, 10);
+  GXAddVLine(1,1,10);
+  GXAddText(20,40, "Hedgehog!");
+  GXAddPixel(15,10);
+  GXAddPixel(14,10);
+  GXAddPixel(13,10);
+  GXAddPixel(12,10);
+  GXAddPixel(11,10);
+  GXAddPixel(10,10);
+  GXAddPixel(9,10);
+  GXAddPixel(8,10);
+  GXAddPixel(7,10);
+  GXAddPixel(11,11);
+  GXAddPixel(11,12);
+  GXAddPixel(11,13);
+  GXAddPixel(11,14);
+  GXAddPixel(11,15);
+  GXAddPixel(11,16);
+  GXAddPixel(11,17);
+  GXAddPixel(11,18);
+  GXAddPixel(15,18);
+  GXAddPixel(14,18);
+  GXAddPixel(13,18);
+  GXAddPixel(12,18);
+  GXAddPixel(11,18);
+  GXAddPixel(10,18);
+  GXAddPixel(9,18);
+  GXAddPixel(8,18);
+  GXAddPixel(7,18);
+
+
+  GXUpdate();
+  for (;;) {
+    //HHPrint("12347237423942334235823525");
+  }
 }

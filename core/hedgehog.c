@@ -26,6 +26,10 @@ int attrib = (0 << 4) | (15 & 0x0F);
 int csrX = 0;
 int csrY = 0;
 
+extern void HHSetScreenColor(unsigned char forecolor, unsigned char backcolor) {
+    attrib = (backcolor << 4) | (forecolor & 0x0F);
+}
+
 void HHCopyBuf(char *dest, char *src, int size) {
   int i = 0;
   while (i < size) {
@@ -33,6 +37,7 @@ void HHCopyBuf(char *dest, char *src, int size) {
 	  i++;
   }
 }
+
 
 int HHStrCmp(char *a, char *b, int min) {
   int i = 0;
@@ -161,6 +166,14 @@ void HHPrint(char *foo) {
 	}
 }
 
+void HHArrayPrint(char *foo, int arrlen) {
+  int i = 0;
+  while (i <= arrlen) {
+    HHPrint(foo[i]);
+    i++;
+  }
+}
+
 void HHCrash(char *err) {
   attrib = (4 << 4) | (15 & 0x0F); // It's a RED screen of death
   HHClearScreen();
@@ -181,7 +194,6 @@ void HHCrash(char *err) {
 
 }
 int memBase = 0x100000;
-
 int HHAlloc(size bytes) {
 	if ((memBase + (int)bytes) > 0xFFFFFF) {
 		attrib = (4 << 4) | (15 & 0x0F); /* Screen goes red to signify we're out of memory */
