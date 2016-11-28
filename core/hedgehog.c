@@ -13,12 +13,9 @@
 #define LICENSE AIM_PUBLIC
 
 #include <hedgehog.h>
-
-extern void HHClearScreen();
+#include <gfx.h>
 //extern void ____putch(char c);
-extern void HHSetScreenColor(unsigned char forecolor, unsigned char backcolor);
 extern void HHInitialiseVideo();
-
 // VGA variables
 unsigned short *textMemPtr;
  // 0, Black Background; 15, White Foreground
@@ -166,13 +163,7 @@ void HHPrint(char *foo) {
 	}
 }
 
-void HHArrayPrint(char *foo, int arrlen) {
-  int i = 0;
-  while (i <= arrlen) {
-    HHPrint(foo[i]);
-    i++;
-  }
-}
+
 
 void HHCrash(char *err) {
   attrib = (4 << 4) | (15 & 0x0F); // It's a RED screen of death
@@ -249,32 +240,96 @@ char **HHStrTok(char *toTok, char delim) {
   return buf;
 }
 
+void HHSleep(int s) {
+  int cntr = s *1000000000000000;
+  int c2;
+  int i=0;
+  while (i<cntr){
+    c2 = cntr * 123948;
+    cntr = c2 / 123948;
+    cntr++;
+  }
+}
 /*
 void PrintChar(char char_) {
   ____putch(char_);
 }
 */
 // hedgehog() is usually called main()
+void HHSplashScreen() {
+  GXSetColours(15,6);
+  //Draw H
+  GXAddVLine(5,5,9);
+  GXAddHLine(9,5,9);
+  GXAddVLine(5,14,9);
+  //Draw E
+  GXAddVLine(5,16,9);
+  GXAddHLine(5,17,4);
+  GXAddHLine(9,17,2);
+  GXAddHLine(13,17,4);
+  //Draw D
+  GXAddHLine(5,22,9);
+  GXAddHLine(13,22,9);
+  GXAddVLine(5,25,8);
+  GXAddVLine(6,31,7);
+  //Draw G
+  GXAddHLine(5,33,9);
+  GXAddHLine(13,33,9);
+  GXAddVLine(5,33,8);
+  GXAddVLine(10,41,3);
+  GXAddHLine(10,40,2);
+  //Draw E
+  GXAddVLine(5,43,9);
+  GXAddHLine(5,44,4);
+  GXAddHLine(9,44,2);
+  GXAddHLine(13,44,4);
+  //Draw H
+  GXAddVLine(5,50,9);
+  GXAddHLine(9,50,9);
+  GXAddVLine(5,59,9);
+  // Draw O
+  GXAddHLine(5,61,5);
+  GXAddHLine(13,61,5);
+  GXAddVLine(5,61,9);
+  GXAddVLine(5,66,9);
+  //Draw G
+  GXAddHLine(5,68,6);
+  GXAddHLine(13,68,6);
+  GXAddVLine(5,68,8);
+  GXAddVLine(10,73,3);
+  GXAddHLine(10,72,2);
+  // Add TM sign
+  GXAddText(4,75,"(R)");
+  // Add VERSION
+  GXAddText(20,33,"Version ");
+  GXAddText(20,41,VERSION);
+  //HHSleep(2500);
+  GXAddText(15,28, "By Aluminium Computing");
 
+  GXUpdate();
+
+}
 void HHInit() {
   HHInitialiseVideo(); /* Note British spelling */
   #ifdef DEBUG
     HHPrint("Entered C Kernel\n");
   #endif//DEBUG
-  HHPrint("Starting Up... 15%");
+  GXInit();
+  HHSplashScreen();
+  //HHPrint("Starting Up... 15%");
   HHGdtInstall();
-	HHPrint(" 30%");
+	//HHPrint(" 30%");
   HHIdtInstall();
-	HHPrint(" 45%");
+	//HHPrint(" 45%");
   HHIsrsInstall();
-	HHPrint(" 60%");
+	//HHPrint(" 60%");
   HHIrqInstall();
-	HHPrint(" 70%");
+	//HHPrint(" 70%");
   HHInstallKeyboard();
-	HHPrint(" 85%");
+	//HHPrint(" 85%");
   __asm__ __volatile__ ("sti");
-	HHPrint(" 100%\n");
-  HHPrint("Welcome to Hedgehog....\n\n\n");
+	//HHPrint(" 100%\n");
+  //HHPrint("Welcome to Hedgehog....\n\n\n");
   ShellMain();
   while (1) {
   }

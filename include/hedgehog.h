@@ -12,7 +12,7 @@
 
 #ifndef HEDGE
 #define HEDGE
-#define VERSION "0.1"
+#define VERSION "0.2"
 void ShellMain();
 char *input();
 struct regs /* Registers */
@@ -30,7 +30,11 @@ typedef short len;
 #ifndef NULL
 	#define NULL 0
 #endif
-int HHAlloc(size bytes);
+/*int HHAlloc(size bytes);
+extern void HHClearScreen();
+extern void HHSetScreenColor(unsigned char forecolor, unsigned char backcolor);
+void HHFree(void *ptr);
+char **HHStrTok(char *toTok, char delim)
 extern len HHLenOf(char *string);
 extern void HHCopyBuf(char *dest, char *src, int size);
 extern char HHGetCharFromPort(unsigned short _port);
@@ -41,11 +45,11 @@ void HHCrash(char *err);
 void irq_install_handler(int irq, void (*handler)(struct regs *r));
 
 char *HHStrCat(char *a, char *b, len max);
-
+void HHCrash(char *err);
 extern void HHGdtSetGate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
-
+int HHStrCmp(char *a, char *b, int min);
 extern void HHGdtInstall();
-
+unsigned short *HHMemsetW(unsigned short *dest, unsigned short val, int count);
 extern void HHIdtInstall();
 extern void HHIsrsInstall();
 
@@ -53,5 +57,5 @@ extern void HHIrqInstall();
 extern void HHIrqInstallHandler();
 extern void HHIrqUninstallHandler();
 extern void HHInstallKeyboard();
-
+*/
 #endif // HEDGE

@@ -45,6 +45,8 @@ void runShell() {
       HHCrash("0x17_SHELL");
     } else if ((HHStrCmp(command, "gfx", 3)) == 0) {
       gfx();
+    } else if ((HHStrCmp(command, "intro",5 )) ==0) {
+      HHSplashScreen();
     } else {
       notFound(command);
     }

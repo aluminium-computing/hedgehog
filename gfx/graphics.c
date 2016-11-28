@@ -26,6 +26,7 @@ void GXInit() {
     }
     screen[row][col]='\0';
   }
+  HHPrint("Hedgehog Graphical System(TM) Initialised!\n");
 }
 
 void GXAddPixel(int row, int col) {
@@ -47,14 +48,14 @@ void GXAddText(int row, int col, char *text) {
 
 void GXAddHLine(int row, int col, int len) {
   int spot;
-  for (spot = col; spot <= (len+col); spot++) {
+  for (spot = col; spot < (len+col); spot++) {
     GXAddPixel(row, spot);
   }
 }
 
 void GXAddVLine(int row, int col, int len) {
   int spot;
-  for (spot=row; spot<=(len+row); spot++) {
+  for (spot=row; spot<(len+row); spot++) {
     GXAddPixel(spot,col);
   }
 }
